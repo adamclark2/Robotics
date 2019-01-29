@@ -53,10 +53,10 @@ while [ 1 ]; do
         setSpeeds $RMC -$speed $LMC -$speed
 
     elif [ "$U_INPUT" = "a" ]; then
-        setSpeeds $RMC -$turnSpeed $LMC $turnSpeed
+        setSpeeds $RMC $turnSpeed $LMC -$turnSpeed
 
     elif [ "$U_INPUT" = "d" ]; then
-        setSpeeds $RMC $turnSpeed $LMC -$turnSpeed
+        setSpeeds $RMC -$turnSpeed $LMC $turnSpeed
 
     elif [ "$U_INPUT" = "e" ]; then
         setSpeeds $RMC 0 $LMC 0
