@@ -1,0 +1,8 @@
+# Build Products
+*.o
+
+# MacOS
+.DS_STORE
+
+# VSCODE
+.vscode/

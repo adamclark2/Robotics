@@ -1,0 +1,25 @@
+
+To run a target type:
+
+        make {target}
+        
+        Example:
+        make help
+
+Targets:
+    build: build the code
+    clean: remove binaries
+    help: show this file
+    run: build & run
+    copy-code: copy the code over to the robot via SCP
+
+Example:
+    make copy-code
+    ssh robot@ev3dev.local
+    cd code
+    make run
+
+Gotcha's
+    - Ensure the robot is connected to the internet via USB or Blutooth
+    - Ensure the robot's network name is ev3dev.local
+    - USB works faster
