@@ -24,3 +24,11 @@ on said robot.
 https://www.ev3dev.org/docs/tutorials/tacho-motors/  
 http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-jessie/motors.html#tacho-motor-subsystem  
 http://in4lio.github.io/ev3dev-c/group__ev3__port.html  
+  
+https://www.ev3dev.org/docs/tutorials/  
+  
+https://www.ev3dev.org/docs/tutorials/connecting-to-ev3dev-with-ssh/  
+https://www.ev3dev.org/docs/tutorials/connecting-to-the-internet-via-bluetooth/  
+https://www.ev3dev.org/docs/tutorials/connecting-to-the-internet-via-usb/  
+https://www.ev3dev.org/docs/tutorials/using-bluetooth-tethering/  
+
