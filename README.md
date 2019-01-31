@@ -4,10 +4,11 @@ on said robot.
 
 # Folders & What they do
 
-|Folder    |What it does                                                            |
-|----------|------------------------------------------------------------------------|
-|CPP_Code  |c++ code for the robot, currently doesn't work due to config            |
-|Bash_Code |Bash scripts to control the robot                                       |
+|Folder     |What it does                                                            |
+|-----------|------------------------------------------------------------------------|
+|CPP_Cod e  |c++ code for the robot, currently doesn't work due to config            |
+|Bash_Code  |Bash scripts to control the robot                                       |
+|Python_Code|Code written in python                                                  |
 
 # Remote control the bot
 
