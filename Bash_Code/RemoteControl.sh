@@ -4,8 +4,8 @@
 source Tacho.sh
 
 # Useful Globals
-speed=1000
-turnSpeed=500
+speed=1050
+turnSpeed=700
 
 # A RemoteControl Written in bash...
 # c++ didn't work well...
