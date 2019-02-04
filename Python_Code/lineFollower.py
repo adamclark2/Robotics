@@ -20,29 +20,33 @@ import atexit
 atexit.register(stopMotors)
 
 while True:
-    if cl.reflected_light_intensity > 20:
-        # White Part
+    light_intensity = cl.reflected_light_intensity
+    if light_intensity > 20:
+        # White Part of the Board 
         LMC.off()
+        RMC.off()
 
         # Try to turn 
-        if cl.reflected_light_intensity > 20:
+        if light_intensity > 20:
             LMC.on_for_degrees(speed=25, degrees=(-360*4), brake=True, block=False)
             RMC.on_for_degrees(speed=25, degrees=(360*4), brake=True, block=False)
 
             for i in range(0,200):
-                if cl.reflected_light_intensity < 20:
+                light_intensity = cl.reflected_light_intensity
+                if light_intensity < 20:
                     LMC.off()
                     RMC.off()
                     i=200
 
-        if cl.reflected_light_intensity > 20:
+        if light_intensity > 20:
             LMC.on_for_degrees(speed=25, degrees=(360*4), brake=True, block=False)
             RMC.on_for_degrees(speed=25, degrees=(-360*4), brake=True, block=True)
             LMC.on_for_degrees(speed=25, degrees=(360*4), brake=True, block=False)
             RMC.on_for_degrees(speed=25, degrees=(-360*4), brake=True, block=False)
 
             for i in range(0,200):
-                if cl.reflected_light_intensity < 20:
+                light_intensity = cl.reflected_light_intensity
+                if light_intensity < 20:
                     LMC.off()
                     RMC.off()
                     i=200
@@ -51,6 +55,6 @@ while True:
         RMC.off()
 
     else:
-        # Black
+        # Black Part of the Board 
         RMC.on(100)
         LMC.on(100)
