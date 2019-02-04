@@ -33,6 +33,7 @@ while True:
                 if cl.reflected_light_intensity < 20:
                     LMC.off()
                     RMC.off()
+                    i=200
 
         if cl.reflected_light_intensity > 20:
             LMC.on_for_degrees(speed=25, degrees=(360*4), brake=True, block=False)
@@ -44,6 +45,7 @@ while True:
                 if cl.reflected_light_intensity < 20:
                     LMC.off()
                     RMC.off()
+                    i=200
 
         LMC.off()
         RMC.off()
