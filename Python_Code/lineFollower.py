@@ -4,20 +4,25 @@ import os
 
 from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_D, SpeedPercent, MoveTank
 from ev3dev2.sensor.lego import ColorSensor
+from ev3dev2.led import Leds
 from time import sleep
 
 print("Program Running...")
 
 cl = ColorSensor() 
+leds = Leds()
 RMC = LargeMotor(OUTPUT_D)
 LMC = LargeMotor(OUTPUT_A)
 
 def stopMotors():
+    leds.all_off()
     RMC.off()
     LMC.off()
 
 import atexit
 atexit.register(stopMotors)
+
+leds.all_off()
 
 while True:
     light_intensity = cl.reflected_light_intensity
@@ -31,6 +36,8 @@ while True:
         if light_intensity > 20:
             LMC.on(-25)
             RMC.on(25)
+            leds.all_off()
+            leds.set_color('LEFT', 'GREEN')
 
             i = 0
             while light_intensity > 20 and i < 25:
@@ -44,6 +51,8 @@ while True:
             if light_intensity > 20:
                 LMC.on(25)
                 RMC.on(-25)
+                leds.all_off()
+                leds.set_color('RIGHT', 'GREEN')
 
                 i = 0
                 while light_intensity > 20 and i < 50:
@@ -85,5 +94,7 @@ while True:
 
     else:
         # Black Part of the Board 
+        leds.all_off()
+
         RMC.on(100)
         LMC.on(100)
