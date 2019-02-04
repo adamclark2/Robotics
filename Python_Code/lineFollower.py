@@ -23,6 +23,7 @@ while True:
     light_intensity = cl.reflected_light_intensity
     if light_intensity > 20:
         # White Part of the Board 
+        # This code attempts micro adjustments
         LMC.off()
         RMC.off()
 
@@ -31,6 +32,32 @@ while True:
             LMC.on(-25)
             RMC.on(25)
 
+            i = 0
+            while light_intensity > 20 and i < 25:
+                i = i + 1
+                sleep(0.005)
+                light_intensity = cl.reflected_light_intensity
+                if light_intensity < 20:
+                    LMC.off()
+                    RMC.off()
+
+            if light_intensity > 20:
+                LMC.on(25)
+                RMC.on(-25)
+
+                i = 0
+                while light_intensity > 20 and i < 50:
+                    i = i + 1
+                    sleep(0.005)
+                    light_intensity = cl.reflected_light_intensity
+                    if light_intensity < 20:
+                        LMC.off()
+                        RMC.off()
+
+        if light_intensity > 20:
+            # This code attempts a bigger adjustment
+            LMC.on(-25)
+            RMC.on(25)
             i = 0
             while light_intensity > 20 and i < 100:
                 i = i + 1
