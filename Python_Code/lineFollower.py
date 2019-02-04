@@ -28,28 +28,30 @@ while True:
 
         # Try to turn 
         if light_intensity > 20:
-            LMC.on_for_degrees(speed=25, degrees=(-360*4), brake=True, block=False)
-            RMC.on_for_degrees(speed=25, degrees=(360*4), brake=True, block=False)
+            LMC.on(-25)
+            RMC.on(25)
 
-            for i in range(0,200):
+            i = 0
+            while light_intensity > 20 and i < 100:
+                i = i + 1
+                sleep(0.005)
                 light_intensity = cl.reflected_light_intensity
                 if light_intensity < 20:
                     LMC.off()
                     RMC.off()
-                    i=200
 
-        if light_intensity > 20:
-            LMC.on_for_degrees(speed=25, degrees=(360*4), brake=True, block=False)
-            RMC.on_for_degrees(speed=25, degrees=(-360*4), brake=True, block=True)
-            LMC.on_for_degrees(speed=25, degrees=(360*4), brake=True, block=False)
-            RMC.on_for_degrees(speed=25, degrees=(-360*4), brake=True, block=False)
+            if light_intensity > 20:
+                LMC.on(25)
+                RMC.on(-25)
 
-            for i in range(0,200):
-                light_intensity = cl.reflected_light_intensity
-                if light_intensity < 20:
-                    LMC.off()
-                    RMC.off()
-                    i=200
+                i = 0
+                while light_intensity > 20 and i < 200:
+                    i = i + 1
+                    sleep(0.005)
+                    light_intensity = cl.reflected_light_intensity
+                    if light_intensity < 20:
+                        LMC.off()
+                        RMC.off()
 
         LMC.off()
         RMC.off()
