@@ -22,72 +22,40 @@ def stopMotors():
 import atexit
 atexit.register(stopMotors)
 
+# Stop the motors if the light intensity is valid
+# ticks is the amount of 5 miliseconds to run the loop
+# led name is 'RIGHT' or 'LEFT' it turns the keypad led's on or off (For dramatic effect)
+def doTurn(rightSpeed,leftSpeed,ticks,led_name)
+    light_intensity = cl.reflected_light_intensity
+    if light_intensity > 20:
+        leds.all_off()
+        leds.set_color(led_name, 'GREEN')
+        i = 0
+        while light_intensity > 20 and i < ticks:
+            i = i + 1
+            sleep(0.005)
+            light_intensity = cl.reflected_light_intensity
+            if light_intensity < 20:
+                LMC.off()
+                RMC.off()
+                leds.all_off()
+
 leds.all_off()
 
 while True:
     light_intensity = cl.reflected_light_intensity
     if light_intensity > 20:
         # White Part of the Board 
-        # This code attempts micro adjustments
         LMC.off()
         RMC.off()
 
-        # Try to turn 
-        if light_intensity > 20:
-            LMC.on(-25)
-            RMC.on(25)
-            leds.all_off()
-            leds.set_color('LEFT', 'GREEN')
+        # This code attempts micro adjustments
+        doTurn(-25,25,25,'LEFT')
+        doTurn(25,-25,50,'RIGHT')
 
-            i = 0
-            while light_intensity > 20 and i < 25:
-                i = i + 1
-                sleep(0.005)
-                light_intensity = cl.reflected_light_intensity
-                if light_intensity < 20:
-                    LMC.off()
-                    RMC.off()
-
-            if light_intensity > 20:
-                LMC.on(25)
-                RMC.on(-25)
-                leds.all_off()
-                leds.set_color('RIGHT', 'GREEN')
-
-                i = 0
-                while light_intensity > 20 and i < 50:
-                    i = i + 1
-                    sleep(0.005)
-                    light_intensity = cl.reflected_light_intensity
-                    if light_intensity < 20:
-                        LMC.off()
-                        RMC.off()
-
-        if light_intensity > 20:
-            # This code attempts a bigger adjustment
-            LMC.on(-25)
-            RMC.on(25)
-            i = 0
-            while light_intensity > 20 and i < 100:
-                i = i + 1
-                sleep(0.005)
-                light_intensity = cl.reflected_light_intensity
-                if light_intensity < 20:
-                    LMC.off()
-                    RMC.off()
-
-            if light_intensity > 20:
-                LMC.on(25)
-                RMC.on(-25)
-
-                i = 0
-                while light_intensity > 20 and i < 200:
-                    i = i + 1
-                    sleep(0.005)
-                    light_intensity = cl.reflected_light_intensity
-                    if light_intensity < 20:
-                        LMC.off()
-                        RMC.off()
+        # Try a bigger adjustment if the micro didn't work
+        doTurn(-25,25,100,'LEFT')
+        doTurn(25,-25,200,'RIGHT')
 
         LMC.off()
         RMC.off()
