@@ -6,11 +6,13 @@ from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_D, SpeedPercent, MoveTank
 from ev3dev2.sensor.lego import ColorSensor
 from ev3dev2.led import Leds
 from time import sleep
+from ev3dev2.sound import Sound
 
 print("Program Running...")
 
 cl = ColorSensor() 
 leds = Leds()
+sound = Sound()
 RMC = LargeMotor(OUTPUT_D)
 LMC = LargeMotor(OUTPUT_A)
 
@@ -61,6 +63,11 @@ while True:
 
         LMC.off()
         RMC.off()
+
+        # End of course or lost
+        light_intensity = cl.reflected_light_intensity
+        if light_intensity > 20:
+            sound.tone(  [  (1000, 100, 0),  (1000, 100, 0),  (100, 100, 0),  (100, 100, 0)  ]  )
 
     else:
         # Black Part of the Board 
