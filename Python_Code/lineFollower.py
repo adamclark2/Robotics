@@ -25,11 +25,13 @@ atexit.register(stopMotors)
 # Stop the motors if the light intensity is valid
 # ticks is the amount of 5 miliseconds to run the loop
 # led name is 'RIGHT' or 'LEFT' it turns the keypad led's on or off (For dramatic effect)
-def doTurn(rightSpeed,leftSpeed,ticks,led_name)
+def doTurn(rightSpeed,leftSpeed,ticks,led_name):
     light_intensity = cl.reflected_light_intensity
     if light_intensity > 20:
         leds.all_off()
         leds.set_color(led_name, 'GREEN')
+        RMC.on(rightSpeed)
+        LMC.on(leftSpeed)
         i = 0
         while light_intensity > 20 and i < ticks:
             i = i + 1
@@ -50,12 +52,12 @@ while True:
         RMC.off()
 
         # This code attempts micro adjustments
-        doTurn(-25,25,25,'LEFT')
-        doTurn(25,-25,50,'RIGHT')
+        doTurn(25,-25,25,'LEFT')
+        doTurn(-25,25,50,'RIGHT')
 
         # Try a bigger adjustment if the micro didn't work
-        doTurn(-25,25,100,'LEFT')
-        doTurn(25,-25,200,'RIGHT')
+        doTurn(25,-25,100,'LEFT')
+        doTurn(-25,25,200,'RIGHT')
 
         LMC.off()
         RMC.off()
