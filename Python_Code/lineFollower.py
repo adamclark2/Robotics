@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 
+# Line Follower
+# By:
+# Adam Clark <adam.clark2@maine.edu>
+# Steven Doherty <steven.doherty@maine.edu>
+#
+# Program follows a line & beeps when the robot reaches the
+# end or gets lost. Robot may turn around and navigate to the
+# beginning. 
+
 import os
 
 from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_D, SpeedPercent, MoveTank
@@ -15,6 +24,7 @@ leds = Leds()
 sound = Sound()
 RMC = LargeMotor(OUTPUT_D)
 LMC = LargeMotor(OUTPUT_A)
+leds.all_off()
 
 def stopMotors():
     leds.all_off()
@@ -43,8 +53,6 @@ def doTurn(rightSpeed,leftSpeed,ticks,led_name):
                 LMC.off()
                 RMC.off()
                 leds.all_off()
-
-leds.all_off()
 
 while True:
     light_intensity = cl.reflected_light_intensity
