@@ -15,6 +15,7 @@ from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_D, SpeedPercent, MoveTank
 from ev3dev2.sensor.lego import ColorSensor
 from ev3dev2.led import Leds
 from time import sleep
+import time
 from ev3dev2.sound import Sound
 
 print("Program Running...")
@@ -33,6 +34,8 @@ def stopMotors():
 
 import atexit
 atexit.register(stopMotors)
+
+start_time = int(round(time.time() * 1000))
 
 # Stop the motors if the light intensity is valid
 # ticks is the amount of 5 miliseconds to run the loop
@@ -55,6 +58,17 @@ def doTurn(rightSpeed,leftSpeed,ticks,led_name):
                 leds.all_off()
 
 while True:
+    if (int(round(time.time() * 1000)) - start_time) > 20000:
+        LMC.off()
+        RMC.off()
+        RMC.on(-50)
+        LMC.on(-50)
+        sleep(5)
+        RMC.on(50)
+        LMC.on(50)
+        sleep(5)
+        start_time = int(round(time.time() * 1000))
+
     light_intensity = cl.reflected_light_intensity
     if light_intensity > 20:
         # White Part of the Board 
