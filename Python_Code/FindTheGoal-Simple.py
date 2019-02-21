@@ -1,5 +1,4 @@
-#!/usr/bin/env python3 -S
-# -S might make python3 faster on the ARM BRICK THING
+#!/usr/bin/python3
 
 # Find The Goal Simple
 # By:
@@ -7,7 +6,8 @@
 # Steven Doherty <steven.doherty@maine.edu>
 #
 # When started on a colored piece of paper
-# it will find another piece of paper 
+# it will find another piece of paper &
+# return to its original paper
 
 import os
 
@@ -28,15 +28,19 @@ C_RED = 5
 C_WHITE = 6
 C_BROWN = 7
 
+HOME = C_RED
+GOAL = C_BLUE
+
 print("Program Running...")
 
+# Sensor Constructors
 cl = ColorSensor() 
 leds = Leds()
 sound = Sound()
 RMC = LargeMotor(OUTPUT_D)
 LMC = LargeMotor(OUTPUT_A)
-leds.all_off()
 
+# Function Defs
 def stopMotors():
     leds.all_off()
     RMC.off()
@@ -45,46 +49,118 @@ def stopMotors():
 import atexit
 atexit.register(stopMotors)
 
+def nagHumans():
+    i = 5
+    while i >= 0:
+        #if i % 3 == 0 or i % 5 == 0:
+            # sound.tone(  [  (1000, 100, 0),  (1000, 100, 0),  (100, 100, 0),  (100, 100, 0)  ]  )
 
-initial_spot = cl.color()
+        leds.set_color('RIGHT', 'GREEN')
+        leds.set_color('LEFT', 'GREEN')
+        sleep(0.1)
+        leds.set_color('RIGHT', 'RED')
+        leds.set_color('LEFT', 'RED')
+        sleep(0.1)
+        i = i - 1
+    
+    leds.all_off()
 
+def backUpThenTurn():
+    RMC.on(-25)
+    LMC.on(-25)
+    sleep(0.15)
+    RMC.on(25)
+    LMC.on(-25)
+    sleep(0.35)
+
+# Initialization of Sensors & Sensor Vars
+RMC.off()
+LMC.off()
+leds.all_off()
+
+cl.mode='COL-COLOR'
+
+while cl.value() != HOME:
+    nagHumans()
+    sleep(0.25)
+
+
+# It's Go Time!
+print("Finding Next Goal...")
 hasFoundFinishGoal = False
-RMC.on(100)
-LMC.on(100)
-while !hasFoundFinishGoal:
-    if cl.color() != C_BLACK and cl.color() != C_NO_COLOR and cl.color() != C_WHITE and cl.color() != initial_spot:
+while not hasFoundFinishGoal:
+    currentColor = cl.value()
+
+    if currentColor != C_BLACK and currentColor != C_NO_COLOR and currentColor != C_WHITE and currentColor == GOAL:
         # Found the goal!
-        hasFoundFinishGoal = True
         RMC.off()
         LMC.off()
 
-    else if cl.color() == C_BLACK or cl.color() == C_NO_COLOR :
-        # Turn & go
-        RMC.on(-25)
+        RMC.on(25)
         LMC.on(25)
-        sleep(0.5)
+        sleep(0.1)
+        stopMotors()
 
-    else if cl.color() == C_WHITE:
-        RMC.on(100)
-        LMC.on(100)
+        # Double Check Sensor
+        idx = 5
+        while idx > 0:
+            currentColor = cl.value()
+            sleep(0.01)
+            if currentColor != GOAL:
+                idx = -2
+            idx = idx - 1
 
+        if idx != -3:
+            nagHumans()
+            hasFoundFinishGoal = True
+            sleep(1)
+
+    elif currentColor == C_BLACK or currentColor == C_NO_COLOR :
+        # Turn & go
+        backUpThenTurn()
+
+    else:
+        RMC.on(50)
+        LMC.on(50)
+
+
+print("Finding Home Goal...")
 hasFoundFirstGoal = False
-while !hasFoundFirstGoal:
-        if cl.color() != C_BLACK and cl.color() != C_NO_COLOR and cl.color() != C_WHITE and cl.color() == initial_spot:
+while not hasFoundFirstGoal:
+    currentColor = cl.value()
+
+    if currentColor != C_BLACK and currentColor != C_NO_COLOR and currentColor != C_WHITE and currentColor == HOME:
         # Found the goal!
-        hasFoundFirstGoal = True
         RMC.off()
         LMC.off()
 
-    else if cl.color() == C_BLACK or cl.color() == C_NO_COLOR :
-        # Turn & go
-        RMC.on(-25)
+        RMC.on(25)
         LMC.on(25)
-        sleep(0.5)
+        sleep(0.1)
+        stopMotors()
 
-    else if cl.color() == C_WHITE:
-        RMC.on(100)
-        LMC.on(100)
+        # Double Check Sensor
+        idx = 5
+        while idx > 0:
+            currentColor = cl.value()
+            if currentColor != HOME:
+                idx = -2
+            idx = idx - 1
+
+        if idx != -3:
+            nagHumans()
+            hasFoundFirstGoal = True
+            sleep(1)
+
+    elif currentColor == C_BLACK or currentColor == C_NO_COLOR :
+        # Turn & go
+        backUpThenTurn()
+
+    else:
+        RMC.on(50)
+        LMC.on(50)
+
+
 
 # Done with Program
 RMC.off()
