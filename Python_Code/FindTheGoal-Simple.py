@@ -72,9 +72,26 @@ def turnRight():
     LMC.on(-25)
     sleep(0.25)
 
+    start = gy.value
     RMC.on(-20)
     LMC.on(20)
-    sleep(1)
+    while(abs(start - gy.value()) < 90):
+        sleep(0.001)
+
+    RMC.off()
+    LMC.off()
+
+def turnAround():
+    RMC.on(-25)
+    LMC.on(-25)
+    sleep(0.25)
+
+    start = gy.value
+    RMC.on(-20)
+    LMC.on(20)
+    while(abs(start - gy.value()) < 180):
+        sleep(0.001)
+
     RMC.off()
     LMC.off()
 
@@ -114,22 +131,61 @@ while cl.value() != HOME:
     nagHumans()
     sleep(0.25)
 
-RMC.on(100)
-LMC.on(100)
-while cl.value() != C_BLACK:
-    sleep(0.001)
+foundGoal = False
+while not foundGoal:
+    RMC.on(100)
+    LMC.on(100)
+    while cl.value() != C_BLACK and not foundGoal:
+        sleep(0.001)
+        if cl.value() == GOAL:
+            nagHumans()
+            foundGoal = True
 
-RMC.on(-100)
-LMC.on(-100)
+    if not foundGoal:
+        turnAround()
 
-while cl.value() != HOME:
-    sleep(0.001)
+    RMC.on(100)
+    LMC.on(100)
 
-RMC.off()
-LMC.off()
+    while cl.value() != C_BLACK and not foundGoal:
+        sleep(0.001)
+        if cl.value() == GOAL:
+            nagHumans()
+            foundGoal = True
+
+    if not foundGoal:
+        turnAround()
+
+    RMC.on(100)
+    LMC.on(100)
+
+    while cl.value() != HOME and not foundGoal:
+        sleep(0.001)
+        if cl.value() == GOAL:
+            nagHumans()
+            foundGoal = True
+
+    if not foundGoal:
+        # Nudge Motors & Try again
+        RMC.on(-10)
+        LMC.on(10)
+        sleep(0.001)
+        stopMotors()
+
+
+foundHome = False
+while not foundHome:
+    RMC.on(-100)
+    LMC.on(-100)
+    
+    while cl.value() != HOME
+        sleep(0.001)
+
+    foundHome = True
 
 
 
 # Done with Program
 RMC.off()
 LMC.off()
+nagHumans()
