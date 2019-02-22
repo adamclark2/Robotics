@@ -13,6 +13,7 @@ import os
 
 from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_D, SpeedPercent, MoveTank
 from ev3dev2.sensor.lego import ColorSensor
+from ev3dev2.sensor.lego import GyroSensor
 from ev3dev2.led import Leds
 from time import sleep
 import time
@@ -35,6 +36,7 @@ print("Program Running...")
 
 # Sensor Constructors
 cl = ColorSensor() 
+gy = GyroSensor()
 leds = Leds()
 sound = Sound()
 RMC = LargeMotor(OUTPUT_D)
@@ -65,13 +67,37 @@ def nagHumans():
     
     leds.all_off()
 
-def backUpThenTurn():
+def turnRight():
     RMC.on(-25)
     LMC.on(-25)
-    sleep(0.15)
-    RMC.on(25)
-    LMC.on(-25)
-    sleep(0.35)
+    sleep(0.25)
+
+    RMC.on(-20)
+    LMC.on(20)
+    sleep(1)
+    RMC.off()
+    LMC.off()
+
+def findCorner():
+    # Find a corner of the board
+    RMC.on(100)
+    LMC.on(100)
+    while cl.value() != C_BLACK:
+        # Idle
+        sleep(0.0001)
+
+
+    turnRight()
+    RMC.on(100)
+    LMC.on(100)
+
+    while cl.value() != C_BLACK:
+        # Idle
+        sleep(0.0001)
+
+    RMC.off()
+    LMC.off()
+    nagHumans()
 
 # Initialization of Sensors & Sensor Vars
 RMC.off()
@@ -79,86 +105,28 @@ LMC.off()
 leds.all_off()
 
 cl.mode='COL-COLOR'
+gy.mode='GYRO-ANG'
+
+#while True:
+    #print(gy.value())
 
 while cl.value() != HOME:
     nagHumans()
     sleep(0.25)
 
+RMC.on(100)
+LMC.on(100)
+while cl.value() != C_BLACK:
+    sleep(0.001)
 
-# It's Go Time!
-print("Finding Next Goal...")
-hasFoundFinishGoal = False
-while not hasFoundFinishGoal:
-    currentColor = cl.value()
+RMC.on(-100)
+LMC.on(-100)
 
-    if currentColor != C_BLACK and currentColor != C_NO_COLOR and currentColor != C_WHITE and currentColor == GOAL:
-        # Found the goal!
-        RMC.off()
-        LMC.off()
+while cl.value() != HOME:
+    sleep(0.001)
 
-        RMC.on(25)
-        LMC.on(25)
-        sleep(0.1)
-        stopMotors()
-
-        # Double Check Sensor
-        idx = 5
-        while idx > 0:
-            currentColor = cl.value()
-            sleep(0.01)
-            if currentColor != GOAL:
-                idx = -2
-            idx = idx - 1
-
-        if idx != -3:
-            nagHumans()
-            hasFoundFinishGoal = True
-            sleep(1)
-
-    elif currentColor == C_BLACK or currentColor == C_NO_COLOR :
-        # Turn & go
-        backUpThenTurn()
-
-    else:
-        RMC.on(50)
-        LMC.on(50)
-
-
-print("Finding Home Goal...")
-hasFoundFirstGoal = False
-while not hasFoundFirstGoal:
-    currentColor = cl.value()
-
-    if currentColor != C_BLACK and currentColor != C_NO_COLOR and currentColor != C_WHITE and currentColor == HOME:
-        # Found the goal!
-        RMC.off()
-        LMC.off()
-
-        RMC.on(25)
-        LMC.on(25)
-        sleep(0.1)
-        stopMotors()
-
-        # Double Check Sensor
-        idx = 5
-        while idx > 0:
-            currentColor = cl.value()
-            if currentColor != HOME:
-                idx = -2
-            idx = idx - 1
-
-        if idx != -3:
-            nagHumans()
-            hasFoundFirstGoal = True
-            sleep(1)
-
-    elif currentColor == C_BLACK or currentColor == C_NO_COLOR :
-        # Turn & go
-        backUpThenTurn()
-
-    else:
-        RMC.on(50)
-        LMC.on(50)
+RMC.off()
+LMC.off()
 
 
 
