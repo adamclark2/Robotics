@@ -82,14 +82,14 @@ def turnRight():
     LMC.off()
 
 def turnAround():
-    RMC.on(-25)
-    LMC.on(-25)
-    sleep(0.25)
+    RMC.on(-15)
+    LMC.on(-15)
+    sleep(1)
 
     start = gy.value()
-    RMC.on(-20)
-    LMC.on(20)
-    while(abs(start - gy.value()) < 180):
+    RMC.on(-10)
+    LMC.on(10)
+    while(abs(start - gy.value()) <= 180):
         sleep(0.001)
 
     RMC.off()
@@ -116,6 +116,15 @@ def findCorner():
     LMC.off()
     nagHumans()
 
+def hasFoundGoal():
+    if cl.value() == GOAL:
+        sleep(0.01)
+        if cl.value() == GOAL:
+            return True
+
+    else:
+        return False
+
 # Initialization of Sensors & Sensor Vars
 RMC.off()
 LMC.off()
@@ -135,41 +144,49 @@ foundGoal = False
 while not foundGoal:
     RMC.on(100)
     LMC.on(100)
+    print("Finding Goal")
     while cl.value() != C_BLACK and not foundGoal:
-        sleep(0.001)
-        if cl.value() == GOAL:
+        sleep(0.01)
+        if hasFoundGoal():
             RMC.off()
             LMC.off()
             nagHumans()
             foundGoal = True
+            print("Found goal 1")
 
     if not foundGoal:
+        print("Have not found goal. Turning...")
         turnAround()
         RMC.on(100)
         LMC.on(100)
 
     while cl.value() != C_BLACK and not foundGoal:
-        sleep(0.001)
-        if cl.value() == GOAL:
+        sleep(0.01)
+        if hasFoundGoal():
             RMC.off()
             LMC.off()
             nagHumans()
             foundGoal = True
+            print("Found goal 2")
 
     if not foundGoal:
+        print("Have not found goal. Turning...")
         turnAround()
         RMC.on(100)
         LMC.on(100)
 
     while cl.value() != HOME and not foundGoal:
-        sleep(0.001)
-        if cl.value() == GOAL:
+        sleep(0.01)
+        if hasFoundGoal():
             RMC.off()
             LMC.off()
             nagHumans()
             foundGoal = True
+            print("Found goal 3")
+
 
     if not foundGoal:
+        print("Have not found goal. Nudge...")
         # Nudge Motors & Try again
         RMC.on(-10)
         LMC.on(10)
@@ -179,10 +196,11 @@ while not foundGoal:
 
 foundHome = False
 while not foundHome:
-    RMC.on(-100)
-    LMC.on(-100)
+    #RMC.on(-100)
+    #LMC.on(-100)
     
-    while cl.value() != HOME
+    print("Going Home...")
+    while cl.value() != HOME:
         sleep(0.001)
 
     foundHome = True
@@ -193,3 +211,5 @@ while not foundHome:
 RMC.off()
 LMC.off()
 nagHumans()
+
+print("****PROGRAM DONE****")
