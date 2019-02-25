@@ -7,7 +7,7 @@
 #
 # When started on a colored piece of paper
 # it will find another piece of paper &
-# return to its original paper
+# return to its original paper. Simple doesn't detect obsticles 
 
 import os
 
@@ -72,7 +72,7 @@ def turnRight():
     LMC.on(-25)
     sleep(0.25)
 
-    start = gy.value
+    start = gy.value()
     RMC.on(-20)
     LMC.on(20)
     while(abs(start - gy.value()) < 90):
@@ -86,7 +86,7 @@ def turnAround():
     LMC.on(-25)
     sleep(0.25)
 
-    start = gy.value
+    start = gy.value()
     RMC.on(-20)
     LMC.on(20)
     while(abs(start - gy.value()) < 180):
@@ -138,30 +138,34 @@ while not foundGoal:
     while cl.value() != C_BLACK and not foundGoal:
         sleep(0.001)
         if cl.value() == GOAL:
+            RMC.off()
+            LMC.off()
             nagHumans()
             foundGoal = True
 
     if not foundGoal:
         turnAround()
-
-    RMC.on(100)
-    LMC.on(100)
+        RMC.on(100)
+        LMC.on(100)
 
     while cl.value() != C_BLACK and not foundGoal:
         sleep(0.001)
         if cl.value() == GOAL:
+            RMC.off()
+            LMC.off()
             nagHumans()
             foundGoal = True
 
     if not foundGoal:
         turnAround()
-
-    RMC.on(100)
-    LMC.on(100)
+        RMC.on(100)
+        LMC.on(100)
 
     while cl.value() != HOME and not foundGoal:
         sleep(0.001)
         if cl.value() == GOAL:
+            RMC.off()
+            LMC.off()
             nagHumans()
             foundGoal = True
 
