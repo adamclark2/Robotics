@@ -82,13 +82,17 @@ def turnRight():
     LMC.off()
 
 def turnAround():
-    RMC.on(-15)
-    LMC.on(-15)
+    RMC.on(-25)
+    LMC.on(-25)
     sleep(1)
 
+    RMC.off()
+    LMC.off()
+    sleep(0.01)
     start = gy.value()
-    RMC.on(-10)
-    LMC.on(10)
+
+    RMC.on(-5)
+    LMC.on(5)
     while(abs(start - gy.value()) <= 180):
         sleep(0.001)
 
@@ -140,70 +144,22 @@ while cl.value() != HOME:
     nagHumans()
     sleep(0.25)
 
+
+# **************************************** MAIN ******************************
 foundGoal = False
 while not foundGoal:
-    RMC.on(100)
-    LMC.on(100)
-    print("Finding Goal")
-    while cl.value() != C_BLACK and not foundGoal:
-        sleep(0.01)
-        if hasFoundGoal():
-            RMC.off()
-            LMC.off()
-            nagHumans()
-            foundGoal = True
-            print("Found goal 1")
-
-    if not foundGoal:
-        print("Have not found goal. Turning...")
-        turnAround()
-        RMC.on(100)
-        LMC.on(100)
+    RMC.on(50)
+    LMC.on(50)
+    print("Finding Black Line")
 
     while cl.value() != C_BLACK and not foundGoal:
         sleep(0.01)
-        if hasFoundGoal():
-            RMC.off()
-            LMC.off()
-            nagHumans()
-            foundGoal = True
-            print("Found goal 2")
 
-    if not foundGoal:
-        print("Have not found goal. Turning...")
-        turnAround()
-        RMC.on(100)
-        LMC.on(100)
+    print("   Found Black Line")
 
-    while cl.value() != HOME and not foundGoal:
-        sleep(0.01)
-        if hasFoundGoal():
-            RMC.off()
-            LMC.off()
-            nagHumans()
-            foundGoal = True
-            print("Found goal 3")
-
-
-    if not foundGoal:
-        print("Have not found goal. Nudge...")
-        # Nudge Motors & Try again
-        RMC.on(-10)
-        LMC.on(10)
-        sleep(0.001)
-        stopMotors()
-
-
-foundHome = False
-while not foundHome:
-    #RMC.on(-100)
-    #LMC.on(-100)
-    
-    print("Going Home...")
-    while cl.value() != HOME:
-        sleep(0.001)
-
-    foundHome = True
+    print("Turning")
+    turnAround()
+    print("   Done Turning")
 
 
 
