@@ -54,8 +54,8 @@ atexit.register(stopMotors)
 def nagHumans():
     i = 5
     while i >= 0:
-        #if i % 3 == 0 or i % 5 == 0:
-            # sound.tone(  [  (1000, 100, 0),  (1000, 100, 0),  (100, 100, 0),  (100, 100, 0)  ]  )
+        if i % 3 == 0 or i % 5 == 0:
+            sound.tone(  [  (1000, 100, 0),  (1000, 100, 0),  (100, 100, 0),  (100, 100, 0)  ]  )
 
         leds.set_color('RIGHT', 'GREEN')
         leds.set_color('LEFT', 'GREEN')
@@ -67,19 +67,14 @@ def nagHumans():
     
     leds.all_off()
 
-def turnRight():
-    RMC.on(-25)
-    LMC.on(-25)
-    sleep(0.25)
+def hasFoundGoal():
+    if cl.value() == GOAL:
+        sleep(0.01)
+        if cl.value() == GOAL:
+            return True
 
-    start = gy.value()
-    RMC.on(-20)
-    LMC.on(20)
-    while(abs(start - gy.value()) < 90):
-        sleep(0.001)
-
-    RMC.off()
-    LMC.off()
+    else:
+        return False
 
 def turnAround():
     RMC.on(-25)
@@ -91,43 +86,13 @@ def turnAround():
     sleep(0.01)
     start = gy.value()
 
-    RMC.on(-5)
-    LMC.on(5)
-    while(abs(start - gy.value()) <= 180):
+    RMC.on(-10)
+    LMC.on(10)
+    while(abs(start - gy.value()) <= 90):
         sleep(0.001)
 
     RMC.off()
     LMC.off()
-
-def findCorner():
-    # Find a corner of the board
-    RMC.on(100)
-    LMC.on(100)
-    while cl.value() != C_BLACK:
-        # Idle
-        sleep(0.0001)
-
-
-    turnRight()
-    RMC.on(100)
-    LMC.on(100)
-
-    while cl.value() != C_BLACK:
-        # Idle
-        sleep(0.0001)
-
-    RMC.off()
-    LMC.off()
-    nagHumans()
-
-def hasFoundGoal():
-    if cl.value() == GOAL:
-        sleep(0.01)
-        if cl.value() == GOAL:
-            return True
-
-    else:
-        return False
 
 # Initialization of Sensors & Sensor Vars
 RMC.off()
@@ -147,25 +112,54 @@ while cl.value() != HOME:
 
 # **************************************** MAIN ******************************
 foundGoal = False
+right = 1
+start = int(round(time.time() * 1000))
 while not foundGoal:
-    RMC.on(50)
-    LMC.on(50)
-    print("Finding Black Line")
+    RMC.on(right)
+    LMC.on(100)
+    if int(round(time.time() * 1000)) - start >= 250:
+        right = right + 1
+        if right > 100:
+            right = 100
+        print("Faster by " + str(right))
+        start = int(round(time.time() * 1000))
+    if cl.value() == C_BLACK or cl.value() == C_NO_COLOR:
+        turnAround()
+    if cl.value() == GOAL:
+        RMC.off()
+        LMC.off()
+        nagHumans()
+        nagHumans()
+        foundGoal = True
 
-    while cl.value() != C_BLACK and not foundGoal:
-        sleep(0.01)
-
-    print("   Found Black Line")
-
-    print("Turning")
-    turnAround()
-    print("   Done Turning")
+foundGoal = False
+right = 1
+start = int(round(time.time() * 1000))
+while not foundGoal:
+    RMC.on(right)
+    LMC.on(100)
+    if int(round(time.time() * 1000)) - start >= 250:
+        right = right + 1
+        if right > 100:
+            right = 100
+        print("Faster by " + str(right))
+        start = int(round(time.time() * 1000))
+    if cl.value() == C_BLACK or cl.value() == C_NO_COLOR:
+        turnAround()
+    if cl.value() == HOME:
+        RMC.off()
+        LMC.off()
+        nagHumans()
+        nagHumans()
+        foundGoal = True
 
 
 
 # Done with Program
 RMC.off()
 LMC.off()
+nagHumans()
+nagHumans()
 nagHumans()
 
 print("****PROGRAM DONE****")
