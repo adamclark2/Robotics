@@ -3,7 +3,6 @@
 # Find The Goal Simple
 # By:
 # Adam Clark <adam.clark2@maine.edu>
-# Steven Doherty <steven.doherty@maine.edu>
 #
 # When started on a colored piece of paper
 # it will find another piece of paper &
@@ -66,15 +65,7 @@ def nagHumans():
         i = i - 1
     
     leds.all_off()
-
-def hasFoundGoal():
-    if cl.value() == GOAL:
-        sleep(0.01)
-        if cl.value() == GOAL:
-            return True
-
-    else:
-        return False
+    
 
 def turnAround():
     RMC.on(-25)
@@ -102,9 +93,6 @@ leds.all_off()
 cl.mode='COL-COLOR'
 gy.mode='GYRO-ANG'
 
-#while True:
-    #print(gy.value())
-
 while cl.value() != HOME:
     nagHumans()
     sleep(0.25)
@@ -129,7 +117,6 @@ while not foundGoal:
         RMC.off()
         LMC.off()
         nagHumans()
-        nagHumans()
         foundGoal = True
 
 foundGoal = False
@@ -150,7 +137,6 @@ while not foundGoal:
         RMC.off()
         LMC.off()
         nagHumans()
-        nagHumans()
         foundGoal = True
 
 
@@ -158,8 +144,6 @@ while not foundGoal:
 # Done with Program
 RMC.off()
 LMC.off()
-nagHumans()
-nagHumans()
 nagHumans()
 
 print("****PROGRAM DONE****")
