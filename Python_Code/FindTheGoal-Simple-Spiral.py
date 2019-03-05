@@ -54,8 +54,8 @@ atexit.register(stopMotors)
 def nagHumans():
     i = 5
     while i >= 0:
-        if i % 3 == 0 or i % 5 == 0:
-            sound.tone(  [  (1000, 100, 0),  (1000, 100, 0),  (100, 100, 0),  (100, 100, 0)  ]  )
+        #if i % 3 == 0 or i % 5 == 0:
+            #sound.tone(  [  (1000, 100, 0),  (1000, 100, 0),  (100, 100, 0),  (100, 100, 0)  ]  )
 
         leds.set_color('RIGHT', 'GREEN')
         leds.set_color('LEFT', 'GREEN')
