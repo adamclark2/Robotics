@@ -75,6 +75,10 @@ def backUpThenTurn():
     LMC.on(-25)
     sleep(0.35)
 
+def hasBumpedBook():
+    # Check to see if book is bumped
+    return us.distance_centimeters < 15
+
 # Initialization of Sensors & Sensor Vars
 RMC.off()
 LMC.off()
@@ -137,7 +141,7 @@ while i > 0:
                 hasFoundSpot = True
                 sleep(1)
 
-        elif currentColor == C_BLACK or currentColor == C_NO_COLOR:
+        elif currentColor == C_BLACK or currentColor == C_NO_COLOR or hasBumpedBook():
             # Turn & go
             backUpThenTurn()
 
