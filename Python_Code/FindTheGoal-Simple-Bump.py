@@ -7,7 +7,9 @@
 # When started on a colored piece of paper
 # it will find another piece of paper &
 # return to its original paper
-# It will try to avoid books
+#
+# RED is Home
+# BLUE is Goal
 
 import os
 
@@ -81,16 +83,6 @@ LMC.off()
 leds.all_off()
 
 cl.mode='COL-COLOR'
-
-'''
-leds.all_off()
-while True:
-    if us.distance_centimeters < 10:
-        leds.set_color('RIGHT', 'RED')
-        leds.set_color('LEFT', 'RED')
-    else:
-        leds.all_off()
-'''
         
 while cl.value() != HOME:
     nagHumans()
@@ -100,10 +92,10 @@ while cl.value() != HOME:
 
 
 # **************************************** MAIN ******************************
-print("Finding Next Goal...")
 i = 2
 
 while i > 0:
+    print("Finding Next Spot...")
     SPOT = HOME
     if i == 2:
         SPOT = GOAL

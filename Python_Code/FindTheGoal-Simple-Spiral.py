@@ -7,6 +7,9 @@
 # When started on a colored piece of paper
 # it will find another piece of paper &
 # return to its original paper. Simple doesn't detect obsticles 
+#
+# RED is Home
+# BLUE is Goal
 
 import os
 
