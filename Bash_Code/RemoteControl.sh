@@ -4,8 +4,8 @@
 source Tacho.sh
 
 # Useful Globals
-speed=1050
-turnSpeed=700
+speed=-1050
+turnSpeed=-700
 
 # A RemoteControl Written in bash...
 # c++ didn't work well...
@@ -50,13 +50,13 @@ while [ 1 ]; do
         setSpeeds $RMC $speed $LMC $speed
 
     elif [ "$U_INPUT" = "s" ]; then
-        setSpeeds $RMC -$speed $LMC -$speed
+        setSpeeds $RMC "$((-1 * $speed))" $LMC "$((-1 * $speed))"
 
     elif [ "$U_INPUT" = "a" ]; then
-        setSpeeds $RMC $turnSpeed $LMC -$turnSpeed
+        setSpeeds $RMC $turnSpeed $LMC "$((-1 * $turnSpeed))"
 
     elif [ "$U_INPUT" = "d" ]; then
-        setSpeeds $RMC -$turnSpeed $LMC $turnSpeed
+        setSpeeds $RMC "$((-1 * $turnSpeed))" $LMC $turnSpeed
 
     elif [ "$U_INPUT" = "e" ]; then
         setSpeeds $RMC 0 $LMC 0

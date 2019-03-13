@@ -34,6 +34,8 @@ C_BROWN = 7
 HOME = C_RED
 GOAL = C_BLUE
 
+POLARITY=-1
+
 print("Program Running...")
 
 # Sensor Constructors
@@ -56,8 +58,8 @@ atexit.register(stopMotors)
 def nagHumans():
     i = 5
     while i >= 0:
-        #if i % 3 == 0 or i % 5 == 0:
-            # sound.tone(  [  (1000, 100, 0),  (1000, 100, 0),  (100, 100, 0),  (100, 100, 0)  ]  )
+        if i % 3 == 0 or i % 5 == 0:
+            sound.tone(  [  (1000, 100, 0),  (1000, 100, 0),  (100, 100, 0),  (100, 100, 0)  ]  )
 
         leds.set_color('RIGHT', 'GREEN')
         leds.set_color('LEFT', 'GREEN')
@@ -69,13 +71,14 @@ def nagHumans():
     
     leds.all_off()
 
+wait_time = 0.6
 def backUpThenTurn():
-    RMC.on(-25)
-    LMC.on(-25)
-    sleep(0.15)
-    RMC.on(25)
-    LMC.on(-25)
-    sleep(0.35)
+    RMC.on(-25 * POLARITY)
+    LMC.on(-25 * POLARITY)
+    sleep(1.5)
+    RMC.on(25 * POLARITY)
+    LMC.on(-25 * POLARITY)
+    sleep(wait_time)
 
 # Initialization of Sensors & Sensor Vars
 RMC.off()
@@ -110,16 +113,16 @@ while i > 0:
             RMC.off()
             LMC.off()
 
-            RMC.on(25)
-            LMC.on(25)
+            RMC.on(25 * POLARITY)
+            LMC.on(25 * POLARITY)
             sleep(0.1)
             stopMotors()
 
             # Double Check Sensor
-            idx = 5
+            idx = 10
             while idx > 0:
                 currentColor = cl.value()
-                sleep(0.01)
+                sleep(0.1)
                 if currentColor != SPOT:
                     idx = -2
                 idx = idx - 1
@@ -134,9 +137,10 @@ while i > 0:
             backUpThenTurn()
 
         else:
-            RMC.on(50)
-            LMC.on(50)
+            RMC.on(35 * POLARITY)
+            LMC.on(35 * POLARITY)
 
+    wait_time = 1
 
 
 # Done with Program

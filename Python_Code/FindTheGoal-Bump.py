@@ -18,6 +18,7 @@ from ev3dev2.sensor.lego import UltrasonicSensor
 from time import sleep
 import time
 from ev3dev2.sound import Sound
+import random
 
 # Constants
 C_NO_COLOR = 0
@@ -28,6 +29,8 @@ C_YELLOW = 4
 C_RED = 5
 C_WHITE = 6
 C_BROWN = 7
+
+random.seed(100)
 
 HOME = C_RED
 GOAL = C_BLUE
@@ -68,12 +71,17 @@ def nagHumans():
     leds.all_off()
 
 def backUpThenTurn():
-    RMC.on(-25)
-    LMC.on(-25)
-    sleep(0.15)
     RMC.on(25)
-    LMC.on(-25)
-    sleep(0.35)
+    LMC.on(25)
+    sleep(0.15)
+    RMC.on(-25)
+    LMC.on(25)
+    sleep(random.random())
+
+# Table is detected as yellow/brown
+# Line may be detected as black, no color, or green ... idk why green
+def isOnBlackLineOrTable(currentColor):
+    return currentColor == C_BLACK or currentColor == C_NO_COLOR or currentColor == C_GREEN or currentColor == C_YELLOW or currentColor == C_BROWN
 
 def hasBumpedBook():
     # Check to see if book is bumped
@@ -85,6 +93,7 @@ LMC.off()
 leds.all_off()
 
 cl.mode='COL-COLOR'
+#cl.mode='RGB-RAW'
 
 '''
 leds.all_off()
@@ -95,9 +104,27 @@ while True:
     else:
         leds.all_off()
 '''
-        
+
+''' 
+while True:
+    if cl.value() == C_BROWN:
+        print("BROWN")
+    else:
+        print(cl.value())
+'''
+
+'''
+while True:  
+    red = cl.value(0)
+    green=cl.value(1)
+    blue=cl.value(2)
+    print("Red: " + str(red) + ", Green: " + str(green) + ", Blue: " + str(blue))
+'''
+
 while cl.value() != HOME:
     nagHumans()
+    print("NOT ON HOME")
+    print(cl.value())
     sleep(0.25)
 
 
@@ -122,8 +149,8 @@ while i > 0:
             RMC.off()
             LMC.off()
 
-            RMC.on(25)
-            LMC.on(25)
+            RMC.on(-25)
+            LMC.on(-25)
             sleep(0.1)
             stopMotors()
 
@@ -141,13 +168,13 @@ while i > 0:
                 hasFoundSpot = True
                 sleep(1)
 
-        elif currentColor == C_BLACK or currentColor == C_NO_COLOR or hasBumpedBook():
+        elif isOnBlackLineOrTable(currentColor) or hasBumpedBook():
             # Turn & go
             backUpThenTurn()
 
         else:
-            RMC.on(50)
-            LMC.on(50)
+            RMC.on(-50)
+            LMC.on(-50)
 
 
 
