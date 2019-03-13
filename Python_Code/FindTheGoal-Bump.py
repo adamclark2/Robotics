@@ -93,48 +93,22 @@ LMC.off()
 leds.all_off()
 
 cl.mode='COL-COLOR'
-#cl.mode='RGB-RAW'
 
-'''
-leds.all_off()
-while True:
-    if us.distance_centimeters < 10:
-        leds.set_color('RIGHT', 'RED')
-        leds.set_color('LEFT', 'RED')
-    else:
-        leds.all_off()
-'''
-
-''' 
-while True:
-    if cl.value() == C_BROWN:
-        print("BROWN")
-    else:
-        print(cl.value())
-'''
-
-'''
-while True:  
-    red = cl.value(0)
-    green=cl.value(1)
-    blue=cl.value(2)
-    print("Red: " + str(red) + ", Green: " + str(green) + ", Blue: " + str(blue))
-'''
 
 while cl.value() != HOME:
     nagHumans()
-    print("NOT ON HOME")
-    print(cl.value())
+    print("NOT ON HOME" + str(cl.value()))
     sleep(0.25)
 
 
 
 
 # **************************************** MAIN ******************************
-print("Finding Next Goal...")
+
 i = 2
 
 while i > 0:
+    print("Finding Next Goal..." + str(i))
     SPOT = HOME
     if i == 2:
         SPOT = GOAL
