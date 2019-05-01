@@ -15,6 +15,8 @@ from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_D, SpeedPercent, MoveTank
 from ev3dev2.sensor.lego import ColorSensor
 from ev3dev2.led import Leds
 from ev3dev2.sensor.lego import UltrasonicSensor
+from ev3dev2.sensor import INPUT_1, INPUT_4
+from ev3dev2.sensor.lego import TouchSensor
 from time import sleep
 import time
 from ev3dev2.sound import Sound
@@ -44,6 +46,8 @@ sound = Sound()
 RMC = LargeMotor(OUTPUT_D)
 LMC = LargeMotor(OUTPUT_A)
 us = UltrasonicSensor()
+ts = TouchSensor()
+
 
 # Function Defs
 def stopMotors():
@@ -57,8 +61,8 @@ atexit.register(stopMotors)
 def nagHumans():
     i = 5
     while i >= 0:
-        #if i % 3 == 0 or i % 5 == 0:
-            # sound.tone(  [  (1000, 100, 0),  (1000, 100, 0),  (100, 100, 0),  (100, 100, 0)  ]  )
+        if i % 3 == 0 or i % 5 == 0:
+            sound.tone(  [  (1000, 100, 0),  (1000, 100, 0),  (100, 100, 0),  (100, 100, 0)  ]  )
 
         leds.set_color('RIGHT', 'GREEN')
         leds.set_color('LEFT', 'GREEN')
@@ -70,13 +74,56 @@ def nagHumans():
     
     leds.all_off()
 
-def backUpThenTurn():
+def checkForSpot(SPOT):
+    # Found the spot!
+    RMC.off()
+    LMC.off()
+
+    RMC.on(-25)
+    LMC.on(-25)
+    sleep(0.1)
+    stopMotors()
+
+    # Double Check Sensor
+    idx = 10
+    while idx > 0:
+        currentColor = cl.value()
+        sleep(0.1)
+        if currentColor != SPOT:
+            idx = -2
+        idx = idx - 1
+
+    if idx != -3:
+        stopMotors()
+        nagHumans()
+        sleep(2)
+        straightLine = 0
+        return True
+
+    return False
+
+def backUpThenTurn(spot):
     RMC.on(25)
     LMC.on(25)
-    sleep(0.15)
-    RMC.on(-25)
-    LMC.on(25)
-    sleep(random.random())
+    sleep(6 * random.random())
+    RMC.on(25)
+    LMC.on(-25)
+
+    done=False
+    stopAt = int(round(time.time() * 1000)) + (random.random() * 5 * 1000)
+    while (int(round(time.time() * 1000)) - stopAt <= 0) and not done:
+        sleep(0.01)
+        currentColor = cl.value()
+        if currentColor == spot:
+            stopMotors()
+            retVal = checkForSpot(spot)
+            if(retVal):
+                return retVal
+            else:
+                RMC.on(25)
+                LMC.on(-25)
+
+    return False
 
 # Table is detected as yellow/brown
 # Line may be detected as black, no color, or green ... idk why green
@@ -84,8 +131,23 @@ def isOnBlackLineOrTable(currentColor):
     return currentColor == C_BLACK or currentColor == C_NO_COLOR or currentColor == C_GREEN or currentColor == C_YELLOW or currentColor == C_BROWN
 
 def hasBumpedBook():
-    # Check to see if book is bumped
-    return us.distance_centimeters < 15
+    return False
+
+turnAmnt=2.3
+
+def turnRight():
+    RMC.on(25)
+    LMC.on(-25)
+    sleep(turnAmnt)
+
+
+def turnLeft():
+    RMC.on(-25)
+    LMC.on(25)
+    sleep(turnAmnt)
+
+def isBookNearBy():
+    return False
 
 # Initialization of Sensors & Sensor Vars
 RMC.off()
@@ -93,7 +155,6 @@ LMC.off()
 leds.all_off()
 
 cl.mode='COL-COLOR'
-
 
 while cl.value() != HOME:
     nagHumans()
@@ -115,40 +176,46 @@ while i > 0:
 
     i = i - 1
     hasFoundSpot = False
+    straightLine = 0
+    goRight=True
+    bookTurns=5
     while not hasFoundSpot:
         currentColor = cl.value()
 
         if currentColor != C_BLACK and currentColor != C_NO_COLOR and currentColor != C_WHITE and currentColor == SPOT:
-            # Found the spot!
-            RMC.off()
-            LMC.off()
+            hasFoundSpot = checkForSpot(SPOT)
+            straightLine = 0
 
-            RMC.on(-25)
-            LMC.on(-25)
-            sleep(0.1)
-            stopMotors()
-
-            # Double Check Sensor
-            idx = 5
-            while idx > 0:
-                currentColor = cl.value()
-                sleep(0.01)
-                if currentColor != SPOT:
-                    idx = -2
-                idx = idx - 1
-
-            if idx != -3:
-                nagHumans()
-                hasFoundSpot = True
+        elif hasBumpedBook() or isBookNearBy() or straightLine > 3000 or ts.value():
+            if bookTurns <= 5:
+                bookTurns = bookTurns + 1
+                turnRight()
+                RMC.on(-100)
+                LMC.on(-100)
                 sleep(1)
+                turnLeft()
+            else:
+                if backUpThenTurn(SPOT):
+                    hasFoundSpot = True
 
-        elif isOnBlackLineOrTable(currentColor) or hasBumpedBook():
+                straightLine = 0
+
+        elif isOnBlackLineOrTable(currentColor):
             # Turn & go
-            backUpThenTurn()
+            if backUpThenTurn(SPOT):
+                hasFoundSpot = True
+
+            straightLine = 0
 
         else:
-            RMC.on(-50)
-            LMC.on(-50)
+            RMC.on(-100)
+            LMC.on(-100)
+
+            if straightLine % 5 == 0:
+                goRight = not goRight
+
+            sleep(0.01)
+            straightLine = straightLine + 1
 
 
 
